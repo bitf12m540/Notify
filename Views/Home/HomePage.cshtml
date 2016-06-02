@@ -1,0 +1,208 @@
+﻿@{
+    ViewBag.Title = "~/Views/Shared/_Layout.cshtml";
+  
+}
+@using Parse;
+@using Logic_Project.Models
+
+
+
+
+
+@section HomePage{
+
+    
+  
+   
+    @{string type = Session["type"].ToString();}
+
+    @if (type.Equals("student"))
+    { }
+    else
+    { 
+<form  class="form-group" action="Post">
+    <div class="row">
+        <div class="col-md-8 col-sm-6" style="width: 55%;
+    margin-left: 1.4%;">
+
+            <div class="tiles white">
+                <textarea rows="3" class="form-control user-status-box post-input" name="message" id="message" placeholder="Whats on your mind?"></textarea>
+            </div>
+            <div class="tiles grey padding-10">
+                <div class="pull-left">
+                    <button class="btn btn-default btn-sm btn-small" type="button"><i class="fa fa-image"></i></button>
+                    <button class="btn btn-default btn-sm btn-small" type="button"><i class="fa fa-file"></i></button>
+                </div>
+                <div class="pull-right">
+
+                    <input type="submit" class="btn btn-primary btn-sm btn-small" value="POST" />
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-md-1 col-sm-2 m-b-10">
+            <div class="form-group">
+                <select class="input-medium" name="Degree">
+                    <option value="bit">BIT</option>
+                    <option value="bcs">BCS</option>
+                    <option value="bse">BSE</option>
+                    <option value="all" selected="selected">All</option>
+
+                </select>
+            </div>
+        </div>
+        <div class="col-md-1 col-sm-2 m-b-10">
+            <div class="form-group">
+                <select class="input-medium" name="Batch">
+                    <option value="f12">12</option>
+                    <option value="f13">13</option>
+                    <option value="f14">14</option>
+                    <option value="f15">15</option>
+                    <option value="all" selected="selected">All</option>
+
+                </select>
+            </div>
+            </div>
+            <div class="col-md-1 col-sm-2 m-b-10">
+                <div class="form-group">
+                    <select class="input-medium" name="Session">
+                        <option value="m">Morning</option>
+                        <option value="a">Evening</option>
+
+                        <option value="all" selected="selected">All</option>
+
+                    </select>
+
+                </div>
+            </div>
+    </div>
+</form>
+}
+<div id="newPost"></div>
+
+    @{ var myMessage = "Hello World"; }
+@{ var postId = "Hello World"; }
+@{ var pId = "Hello World"; }
+@{ var comment = "Hello World"; }
+@{ var dateTime = DateTime.Now;
+   var Id = "null";
+   var commentedBy = "null";
+   }
+@foreach (var p in ViewBag.Posts)
+{
+    Id = p.ObjectId;
+    var author = p.author;
+    myMessage = p.post;
+    
+<div class="col-md-10 col-sm-6">
+    @*<a class="pull-right" href="/Home/delPost?Id=@Id">X</a>
+    <a class="pull-right" href="/Home/updatePost?Id=@Id">U</a>*@
+    <div class="row">
+      
+        <div class="col-md-8 m-b-10">
+            <div class="widget-item narrow-margin">
+
+                <div class="tiles white p-t-15  m-b-20">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="profile-img-wrapper pull-left m-l-10">
+                                <div class=" p-r-10"> <img src="~/assets/img/profiles/h.jpg" alt="" data-src="~/assets/img/profiles/h.jpg" data-src-retina="~/assets/img/profiles/h2x.jpg" width="35" height="35"> </div>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="user-name text-black bold large-text">@author <span class="semi-bold">Bhai</span> </div>
+                            <div class="preview-wrapper"><span class="bold"> @myMessage  </span> </div>
+                        </div>
+                    </div>
+
+                    @*<div class="post p-b-15 p-t-15 p-l-15 b-b b-grey">
+                        <ul class="action-bar no-margin ">
+                            <li><a href="#" class="muted"><i class="fa fa-comment m-r-5"></i> 24</a> </li>
+                            <li><a href="#" class="text-error bold"> <i class="fa fa-heart-o  m-r-5"></i> 5</a> </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>*@
+                   
+                   
+                    <div class="clearfix"></div>
+                    <div class="p-b-10 p-l-10 p-r-10">
+                        <div class="profile-img-wrapper pull-left"> <img width="35" height="35" alt="" src="~/assets/img/profiles/e.jpg" data-src="~/assets/img/profiles/e.jpg" data-src-retina="~/assets/img/profiles/e2x.jpg"> </div>
+                        <div class="inline pull-right" style="width:86%">
+                            
+                            <form action="Comment/@p.ObjectId" >
+                                <table>
+                                    <tr>
+                                        <td width="80%">
+                                            <input type="text" style="width: 100%;" name="cccc" placeholder="Write a comment">
+
+                                        </td>
+                                        <td width="10%"><button type="submit"  value="Submit"><span class="input-group-addon"><i class="fa fa-comment"></i></span></button></td>
+                                    </tr>
+
+
+                                </table>
+                            </form>
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    @foreach(var c in ViewBag.Comments)
+                    {
+                       
+                            comment = c.Get<string>("text");
+                            postId = c.Get<string>("postId");
+                            commentedBy = c.Get<string>("author");
+                            pId = p.ObjectId;
+                     
+                        
+                       
+
+                        if (pId.Equals(postId))
+                        { 
+                            
+                      
+                    <div class="p-t-15 p-b-15 b-b b-grey" >
+                        <div class="post overlap-left-10">
+                            <div class="user-profile-pic-wrapper">
+                                <div class="user-profile-pic-2x white-border">
+                                    <img width="45" height="45" src="~/assets/img/profiles/avatar.jpg" alt="" data-src="assets/img/profiles/avatar.jpg" data-src-retina="assets/img/profiles/avatar2x.jpg">
+                                </div>
+                            </div>
+                            <div class="info-wrapper small-width inline">
+                                <div class="info text-black ">
+                            
+                                    <p>
+                                        @comment
+                                    </p>
+                                    <p class="muted small-text"> @commentedBy </p>
+                                    <p class="muted small-text"> @c.CreatedAt </p>
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    }
+                    }
+                </div>
+            </div>
+
+
+        </div>
+        <!--TAB START -->
+       
+        <!--TAB END -->
+
+    </div>
+   
+</div>
+   
+}
+    
+
+
+
+}
